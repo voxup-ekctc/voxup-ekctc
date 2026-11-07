@@ -1,34 +1,588 @@
-<!DOCTYPE html>
-<html lang="en"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VoxUp EKC · Team</title><link rel="icon" href="logo.png">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-</head><body>
-<div id="progress"></div><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
-<section>
-  <img class="logo-hero reveal" src="logo.png" alt="VoxUp EKC">
-  <p class="sub reveal">Meet the voices, creators and minds behind VoxUp.</p>
-  <div class="scroll">Scroll ↓</div>
-</section>
-<section class="team-sec">
-  <h2 class="reveal">Our <span class="grad">Crew</span></h2>
-  <input id="search" class="reveal" placeholder="Search name or position...">
-  <div class="grid" id="grid"></div>
-</section>
-<footer>© VoxUp EKC</footer>
-<script src="members.js"></script><script src="app.js"></script>
-<script>
-const grid = $("#grid");
-function draw(list){
-  grid.innerHTML = list.map(m => `<a class="tm reveal" href="card.html?id=${m.id}">
-    <div class="photo">${photoHTML(m)}</div><h3>${m.name}</h3><small>${m.position}</small>
-    <p style="color:var(--mute);font-size:.8rem;margin-top:4px">${m.department}</p></a>`).join("");
-  startEffects();
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>VoxUp EKC</title>
+<meta name="description" content="VoxUp EKC — the student-run radio, media and creative platform of Eranad Knowledge City Technical Campus.">
+<meta name="theme-color" content="#050a14">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0a2150; --navy-deep:#061330; --ink:#050a14; --ink2:#081226;
+  --orange:#ff8a00; --red:#f0361c; --grad:linear-gradient(180deg,#ff8a00,#f0361c);
+  --grad-h:linear-gradient(90deg,#ff8a00,#f0361c);
+  --text:#eef2fb; --mute:#8d9bb8; --line:rgba(255,255,255,.09);
+  --ease:cubic-bezier(.2,.8,.2,1);
 }
-draw(MEMBERS);
-$("#search").addEventListener("input", e => {
-  const q = e.target.value.toLowerCase();
-  draw(MEMBERS.filter(m => (m.name + m.position + m.department).toLowerCase().includes(q)));
-});
-</script></body></html>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--ink);color:var(--text);font-family:'Montserrat',system-ui,-apple-system,Segoe UI,sans-serif;overflow-x:hidden;line-height:1.5}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+::selection{background:var(--orange);color:#000}
+.progress{position:fixed;left:0;top:0;height:3px;width:100%;transform-origin:0 50%;transform:scaleX(0);background:var(--grad-h);z-index:100}
+
+/* NAV */
+nav{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px clamp(18px,4vw,48px);transition:background .4s,backdrop-filter .4s}
+nav.solid{background:rgba(5,10,20,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.brand{font-weight:900;letter-spacing:.02em;font-size:1.15rem}
+.brand b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand small{font-weight:600;font-size:.62rem;letter-spacing:.35em;color:var(--mute);margin-left:.6em}
+.links{display:flex;gap:clamp(14px,3vw,34px);font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase}
+.links a{color:var(--mute);transition:color .25s;position:relative}
+.links a:hover{color:#fff}
+.links a::after{content:"";position:absolute;left:0;bottom:-6px;height:2px;width:100%;background:var(--grad-h);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+.links a:hover::after{transform:scaleX(1)}
+
+/* HERO */
+.hero{position:relative;height:100svh;min-height:640px;overflow:hidden;isolation:isolate;
+  background:
+   radial-gradient(60% 55% at 22% 78%,rgba(10,33,80,.95),transparent 70%),
+   radial-gradient(45% 45% at 82% 24%,rgba(240,54,28,.28),transparent 70%),
+   radial-gradient(40% 40% at 70% 90%,rgba(255,138,0,.18),transparent 70%),
+   linear-gradient(180deg,#050a14,#06102a 60%,#050a14)}
+.grain{position:absolute;inset:0;z-index:1;opacity:.07;pointer-events:none;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.layer{position:absolute;inset:0;will-change:transform;pointer-events:none}
+.bigtext{z-index:2;display:flex;align-items:center;justify-content:center}
+.bigtext span{font-weight:900;font-size:clamp(7rem,31vw,36rem);line-height:.8;letter-spacing:-.05em;white-space:nowrap;
+  color:transparent;-webkit-text-stroke:2px rgba(255,138,0,.55);
+  background:linear-gradient(180deg,rgba(10,33,80,.9),rgba(10,33,80,0) 85%);-webkit-background-clip:text;background-clip:text;
+  transform:translateY(-3vh)}
+.bigtext.ghost span{-webkit-text-stroke:0;background:linear-gradient(180deg,rgba(255,138,0,.10),transparent 70%);-webkit-background-clip:text;background-clip:text;filter:blur(18px);transform:translateY(-1vh) scale(1.02)}
+.rings{z-index:2}
+.rings i{position:absolute;left:50%;top:46%;border:1px solid rgba(255,138,0,.22);border-radius:50%;transform:translate(-50%,-50%) scale(.2);opacity:0;animation:ring 6s infinite var(--ease)}
+.rings i:nth-child(1){width:60vmin;height:60vmin}
+.rings i:nth-child(2){width:60vmin;height:60vmin;animation-delay:2s}
+.rings i:nth-child(3){width:60vmin;height:60vmin;animation-delay:4s}
+@keyframes ring{0%{transform:translate(-50%,-50%) scale(.3);opacity:0}15%{opacity:.8}100%{transform:translate(-50%,-50%) scale(2.4);opacity:0}}
+
+.stage{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-bottom:6vh;pointer-events:none}
+.eyes{position:relative;z-index:1;display:flex;gap:clamp(18px,4vw,56px);margin-bottom:calc(var(--eye) * -.52);--eye:clamp(84px,13vw,150px)}
+.eye{width:var(--eye);height:var(--eye);border-radius:50%;background:radial-gradient(circle at 50% 38%,#fff,#dfe7f7);position:relative;overflow:hidden;
+  box-shadow:inset 0 -10px 22px rgba(10,33,80,.35),0 0 0 4px var(--navy),0 0 40px rgba(255,138,0,.35)}
+.iris{position:absolute;left:50%;top:50%;width:46%;height:46%;border-radius:50%;margin:-23% 0 0 -23%;
+  background:radial-gradient(circle at 50% 50%,#000 0 28%,var(--navy-deep) 30% 48%,var(--orange) 52% 78%,var(--red) 100%);
+  will-change:transform;transition:transform .08s linear}
+.iris::after{content:"";position:absolute;left:18%;top:16%;width:22%;height:22%;border-radius:50%;background:#fff;opacity:.9}
+.eye .lid{position:absolute;inset:0;background:var(--navy-deep);transform:translateY(-101%);animation:blink 6s infinite}
+@keyframes blink{0%,93%,100%{transform:translateY(-101%)}95.5%{transform:translateY(0)}}
+.plate{position:relative;z-index:2;width:min(86vw,780px);padding:clamp(18px,3.4vw,42px) clamp(18px,4vw,56px);border-radius:28px;
+  background:linear-gradient(160deg,#fff,#eef2fb);box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.6) inset,0 0 120px rgba(255,138,0,.18);
+  transform-style:preserve-3d;will-change:transform}
+.plate svg{width:100%;height:auto;display:block}
+.tagline{margin-top:clamp(18px,3vh,34px);text-align:center;font-weight:800;letter-spacing:.34em;font-size:clamp(.62rem,1.5vw,.9rem);text-transform:uppercase;color:#fff;position:relative;z-index:3}
+.tagline b{background:var(--grad-h);-webkit-background-clip:text;background-clip:text;color:transparent}
+.fore{z-index:5}
+.fore .streak{position:absolute;height:3px;border-radius:3px;background:var(--grad-h);opacity:.9;filter:drop-shadow(0 0 8px rgba(255,138,0,.8))}
+.fore .s1{left:-6%;width:34%;bottom:20%;transform:rotate(-8deg)}
+.fore .s2{right:-6%;width:28%;top:26%;transform:rotate(-8deg)}
+.fore .s3{left:8%;width:12%;bottom:15%;transform:rotate(-8deg);opacity:.5}
+.fore .vig{position:absolute;inset:auto 0 0 0;height:36%;background:linear-gradient(0deg,var(--ink),transparent)}
+.hero-foot{position:absolute;z-index:6;left:0;right:0;bottom:22px;display:flex;justify-content:space-between;align-items:flex-end;padding:0 clamp(18px,4vw,48px);font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--mute);font-weight:600}
+.hero-foot .scroll{display:flex;align-items:center;gap:12px}
+.hero-foot .scroll i{width:1px;height:42px;background:linear-gradient(var(--orange),transparent);animation:drip 2s infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* MARQUEE */
+.marquee{border-block:1px solid var(--line);background:var(--ink2);overflow:hidden;padding:18px 0}
+.track{display:flex;gap:48px;width:max-content;animation:slide 32s linear infinite}
+.track span{font-weight:900;font-size:clamp(1.2rem,3vw,2rem);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.35)}
+.track span:nth-child(even){background:var(--grad-h);-webkit-background-clip:text;background-clip:text;-webkit-text-stroke:0}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* SECTIONS */
+section{position:relative;padding:clamp(80px,14vh,160px) clamp(18px,5vw,72px)}
+.eyebrow{font-size:.72rem;letter-spacing:.4em;text-transform:uppercase;font-weight:700;color:var(--orange);display:flex;align-items:center;gap:14px;margin-bottom:22px}
+.eyebrow::before{content:"";width:42px;height:2px;background:var(--grad-h)}
+h2{font-weight:900;font-size:clamp(2.2rem,7vw,6rem);line-height:.95;letter-spacing:-.03em;text-transform:uppercase}
+h2 em{font-style:normal;background:var(--grad-h);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{max-width:640px;margin-top:28px;color:var(--mute);font-size:clamp(1rem,1.6vw,1.2rem);font-weight:500}
+
+.about{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(30px,6vw,90px);align-items:start;background:linear-gradient(180deg,var(--ink),var(--ink2))}
+.pillars{display:grid;gap:14px}
+.pillar{display:grid;grid-template-columns:auto 1fr;gap:18px;padding:22px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.025);transition:transform .5s var(--ease),border-color .3s,background .3s}
+.pillar:hover{transform:translateX(8px);border-color:rgba(255,138,0,.5);background:rgba(255,138,0,.05)}
+.pillar .n{font-weight:900;font-size:1.5rem;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;min-width:2.2ch}
+.pillar h3{font-size:1.02rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+.pillar p{font-size:.9rem;color:var(--mute);margin-top:4px}
+
+.stats{display:flex;gap:clamp(24px,6vw,80px);flex-wrap:wrap;margin-top:46px}
+.stat b{display:block;font-weight:900;font-size:clamp(3rem,8vw,6.5rem);line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat span{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--mute);font-weight:600}
+
+/* MEMBERS */
+.members{background:radial-gradient(50% 30% at 50% 0%,rgba(10,33,80,.55),transparent 70%),var(--ink2)}
+.mhead{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;margin-bottom:clamp(36px,6vw,70px)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:clamp(18px,2.2vw,30px)}
+.card{--rx:0deg;--ry:0deg;position:relative;border-radius:22px;padding:2px;background:linear-gradient(150deg,rgba(255,255,255,.18),rgba(255,255,255,.03) 40%,rgba(255,138,0,.4));
+  transform:perspective(900px) rotateX(var(--rx)) rotateY(var(--ry));transition:transform .25s ease-out,box-shadow .4s}
+.card:hover{box-shadow:0 30px 70px rgba(0,0,0,.5),0 0 60px rgba(255,138,0,.14)}
+.card-in{height:100%;border-radius:20px;background:linear-gradient(180deg,#0b1a3d,#07112a);padding:20px;display:flex;flex-direction:column;gap:16px;overflow:hidden;position:relative}
+.card-in::before{content:"";position:absolute;left:50%;top:10px;width:46px;height:6px;margin-left:-23px;border-radius:6px;background:#02060f;box-shadow:inset 0 1px 2px rgba(0,0,0,.8)}
+.top{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:.62rem;letter-spacing:.3em;font-weight:700;color:var(--mute);text-transform:uppercase}
+.top b{background:var(--grad-h);-webkit-background-clip:text;background-clip:text;color:transparent;font-size:.8rem;letter-spacing:.12em}
+.ph{position:relative;aspect-ratio:1/1.05;border-radius:14px;overflow:hidden;background:linear-gradient(160deg,var(--navy),#030a1e)}
+.ph img{width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+.mono{position:absolute;inset:0;display:grid;place-items:center;font-weight:900;font-size:4.2rem;letter-spacing:-.04em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.9}
+.ph::after{content:"";position:absolute;inset:auto 0 0 0;height:45%;background:linear-gradient(0deg,rgba(7,17,42,.9),transparent)}
+.role{position:absolute;left:12px;bottom:12px;z-index:2;font-size:.62rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;padding:6px 10px;border-radius:99px;background:var(--grad-h);color:#fff}
+.name{font-size:1.25rem;font-weight:800;letter-spacing:-.01em;line-height:1.15}
+.meta{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;font-size:.78rem}
+.meta dt{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--mute);font-weight:700}
+.meta dd{font-weight:600;word-break:break-word}
+.meta .full{grid-column:1/-1}
+.row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-top:auto}
+.socials{display:flex;gap:8px;flex-wrap:wrap}
+.socials a{font-size:.62rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;padding:8px 11px;border-radius:99px;border:1px solid var(--line);transition:all .25s}
+.socials a:hover{background:var(--grad-h);border-color:transparent;transform:translateY(-2px)}
+.qr{width:68px;height:68px;border-radius:10px;background:#fff;padding:5px;flex:none;cursor:pointer;transition:transform .3s var(--ease)}
+.qr:hover{transform:scale(1.08) rotate(-3deg)}
+.qr svg{width:100%;height:100%;display:block}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(60px) scale(.96);filter:blur(6px);transition:opacity .9s var(--ease),transform .9s var(--ease),filter .9s var(--ease);transition-delay:var(--d,0ms)}
+.rv.in{opacity:1;transform:none;filter:none}
+.rv.l{transform:translateX(-60px)}.rv.r{transform:translateX(60px)}
+.rv.l.in,.rv.r.in{transform:none}
+.line{overflow:hidden;display:block}
+.line>span{display:block;transform:translateY(110%);transition:transform 1s var(--ease);transition-delay:var(--d,0ms)}
+.in .line>span,.line.in>span{transform:none}
+
+/* HEADS */
+.btn{position:relative;display:inline-flex;align-items:center;gap:14px;border:0;cursor:pointer;font:800 .8rem/1 'Montserrat',sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#fff;padding:22px 38px;border-radius:99px;background:var(--grad-h);box-shadow:0 14px 50px rgba(240,54,28,.4);transition:transform .35s var(--ease),box-shadow .35s}
+.btn:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 22px 70px rgba(240,54,28,.55)}
+.btn:focus-visible,.back:focus-visible,.socials a:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.btn svg{width:18px;height:18px;transition:transform .5s var(--ease)}
+
+footer{padding:60px clamp(18px,5vw,72px) 50px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center;color:var(--mute);font-size:.78rem;font-weight:500}
+footer .brand{font-size:1.4rem;color:#fff}
+.insta{display:inline-flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:.72rem;color:#fff;padding:12px 18px;border-radius:99px;border:1px solid var(--line);transition:all .3s var(--ease)}
+.insta svg{width:18px;height:18px}
+.insta:hover{background:var(--grad-h);border-color:transparent;transform:translateY(-3px)}
+/* MEMBER PAGE (QR landing) */
+.page{position:fixed;inset:0;z-index:90;background:radial-gradient(60% 50% at 50% 0%,rgba(10,33,80,.9),transparent 70%),var(--ink);overflow:auto;display:none}
+.page.show{display:block;animation:pg .6s var(--ease)}
+.pg-card{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:90px 18px 40px}
+.cue{font-size:.66rem;letter-spacing:.3em;text-transform:uppercase;color:var(--mute);font-weight:700;animation:bob 2s infinite}
+@keyframes bob{50%{transform:translateY(8px)}}
+.pg-more{min-height:80svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 18px 90px}
+.pg-more .eyebrow{justify-content:center}
+.pg-more .lead{margin:14px auto 30px}
+.exec{background:radial-gradient(50% 30% at 50% 0%,rgba(240,54,28,.13),transparent 70%),var(--ink)}
+#execGrid{grid-template-columns:repeat(auto-fit,minmax(250px,1fr));max-width:1500px}
+@keyframes pg{from{opacity:0;transform:scale(1.03)}to{opacity:1;transform:none}}
+.page .card{width:min(92vw,380px);--rx:0deg;--ry:0deg}
+.page .name{font-size:1.6rem}
+.back{position:fixed;left:18px;top:18px;z-index:95;display:none;background:rgba(255,255,255,.08);border:1px solid var(--line);color:#fff;font:700 .7rem 'Montserrat',sans-serif;letter-spacing:.2em;text-transform:uppercase;padding:12px 18px;border-radius:99px;cursor:pointer;backdrop-filter:blur(8px)}
+.back.show{display:block}
+
+@media(max-width:860px){.about{grid-template-columns:1fr}.links a:nth-child(n+4){display:none}.hero-foot span:first-child{display:none}.hero-foot{justify-content:center}}
+@media(max-width:520px){.brand small{display:none}.links{gap:14px}.plate{border-radius:20px}.eyes{gap:16px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}.rv,.line>span{opacity:1;transform:none;filter:none}}
+/* PHONE FIXES */
+html,body{overflow-x:clip}
+@media(max-width:860px){
+  .rv.r,.rv.l{transform:translateY(40px)}
+  .hero-foot span:last-child{display:none}
+}
+@media(max-width:520px){
+  nav{padding:14px 16px}
+  .links{gap:12px;font-size:.6rem;letter-spacing:.1em}
+  .tagline{letter-spacing:.2em}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<nav id="nav">
+  <a class="brand" href="#top" aria-label="VoxUp EKC home"><b>VOXUP</b><small>EKC</small></a>
+  <div class="links"><a href="#about">About</a><a href="#executive">Executive</a><a href="#members">Members</a></div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="grain"></div>
+  <div class="layer bigtext ghost" data-depth="10"><span>VOXUP</span></div>
+  <div class="layer bigtext" data-depth="22"><span>VOXUP</span></div>
+  <div class="layer rings" aria-hidden="true"><i></i><i></i><i></i></div>
+
+  <div class="stage">
+    <div class="eyes" id="eyes" aria-hidden="true">
+      <div class="eye"><div class="iris"></div><div class="lid"></div></div>
+      <div class="eye"><div class="iris"></div><div class="lid"></div></div>
+    </div>
+    <div class="plate" id="plate">
+      <!-- VoxUp EKC logo, rebuilt in SVG with the brand navy and orange→red gradient -->
+      <svg id="logo" viewBox="0 0 780 320" role="img" aria-label="VoxUp EKC logo">
+        <defs>
+          <linearGradient id="og" gradientUnits="userSpaceOnUse" x1="0" y1="14" x2="0" y2="232"><stop offset="0" stop-color="#ff8a00"/><stop offset=".55" stop-color="#ff6a00"/><stop offset="1" stop-color="#f0361c"/></linearGradient>
+        </defs>
+        <g fill="#0a2150">
+          <polygon points="20,62 82,62 120,160 158,62 220,62 150,202 90,202"/>
+          <path d="M236 178 L214 212 L262 196 Z"/>
+        </g>
+        <circle cx="292" cy="135" r="58" fill="none" stroke="#0a2150" stroke-width="14"/>
+        <g stroke="#0a2150" stroke-width="5" stroke-linecap="round">
+          <path d="M262 128v14M270 118v34M278 108v54M286 120v30M294 100v70M302 114v42M310 122v26M318 130v10"/>
+        </g>
+        <g stroke="#0a2150" stroke-width="26"><path d="M368 100L444 202M444 100L368 202"/></g>
+        <g fill="none" stroke="url(#og)" stroke-width="26">
+          <path d="M504 58V150a33 33 0 0 0 66 0V100"/>
+          <path d="M612 100V234"/>
+          <circle cx="652" cy="148" r="40"/>
+        </g>
+        <polygon points="504,10 470,60 538,60" fill="#ff8a00"/>
+        <g fill="none" stroke="#0a2150" stroke-width="8" stroke-linecap="round">
+          <path d="M702 70a22 22 0 0 1 22 22"/><path d="M702 52a40 40 0 0 1 40 40"/><path d="M702 34a58 58 0 0 1 58 58"/>
+        </g>
+        <g stroke="#ff8a00" stroke-width="4"><path d="M70 272H200M580 272H710"/></g>
+        <text x="390" y="296" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="700" font-size="56" letter-spacing="26" fill="#0a2150">EKC</text>
+      </svg>
+    </div>
+    <p class="tagline">VOICE <b>·</b> VISION <b>·</b> IMPACT</p>
+  </div>
+
+  <div class="layer fore" data-depth="40"><i class="streak s1"></i><i class="streak s2"></i><i class="streak s3"></i><div class="vig"></div></div>
+  <div class="hero-foot"><span>Student radio · Media · Creative</span><span class="scroll"><i></i>Scroll</span><span>EKCTC · Manjeri</span></div>
+</header>
+
+<div class="marquee" aria-hidden="true"><div class="track" id="track"></div></div>
+
+<section class="about" id="about">
+  <div>
+    <div class="eyebrow rv">About VoxUp</div>
+    <h2><span class="line"><span>Every voice</span></span><span class="line" style="--d:120ms"><span>on campus,</span></span><span class="line" style="--d:240ms"><span><em>turned up.</em></span></span></h2>
+    <p class="lead rv" style="--d:200ms">VoxUp is the student-run radio station and media wing of Eranad Knowledge City Technical Campus. We give students a microphone, a camera and a platform, and turn campus talent into stories people actually want to hear.</p>
+    <div class="stats rv" style="--d:300ms">
+      <div class="stat"><b data-count="17">0</b><span>Members</span></div>
+      <div class="stat"><b data-count="5">0</b><span>Executive board</span></div>
+    </div>
+  </div>
+  <div class="pillars">
+    <div class="pillar rv r"><span class="n">01</span><div><h3>Radio &amp; Podcasts</h3><p>Live shows, conversations and long-form podcasts from the student community.</p></div></div>
+    <div class="pillar rv r" style="--d:120ms"><span class="n">02</span><div><h3>Reels &amp; Video</h3><p>Short-form social content and campus films, shot and edited by students.</p></div></div>
+    <div class="pillar rv r" style="--d:240ms"><span class="n">03</span><div><h3>Interviews</h3><p>Sit-downs with faculty, guests and alumni that put real stories on record.</p></div></div>
+    <div class="pillar rv r" style="--d:360ms"><span class="n">04</span><div><h3>Student Skills</h3><p>A showcase for the talent hiding in every department on campus.</p></div></div>
+  </div>
+</section>
+
+<section class="exec" id="executive">
+  <div class="mhead">
+    <div>
+      <div class="eyebrow rv">Executive Board</div>
+      <h2><span class="line"><span>Meet the</span></span><span class="line" style="--d:120ms"><span><em>leaders.</em></span></span></h2>
+    </div>
+    <p class="lead rv" style="margin:0">Our faculty advisor and the four leads who steer VoxUp.</p>
+  </div>
+  <div class="grid" id="execGrid"></div>
+</section>
+
+<section class="members" id="members">
+  <div class="mhead">
+    <div>
+      <div class="eyebrow rv">The Team</div>
+      <h2><span class="line"><span>Meet the</span></span><span class="line" style="--d:120ms"><span><em>voices.</em></span></span></h2>
+    </div>
+    <p class="lead rv" style="margin:0">The students behind every show, reel and story.</p>
+  </div>
+  <div class="grid" id="memberGrid"></div>
+</section>
+
+<footer>
+  <div class="brand"><b>VOXUP</b><small>EKC</small></div>
+  <div>Eranad Knowledge City Technical Campus, Manjeri</div>
+  <a class="insta" href="https://www.instagram.com/voxup_ekctc/" target="_blank" rel="noopener" aria-label="VoxUp on Instagram">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+    @VOXUP_EKC
+  </a>
+  <div>© <span id="yr"></span> VoxUp EKC</div>
+</footer>
+
+<button class="back" id="back">← VoxUp EKC</button>
+<div class="page" id="page" aria-live="polite"></div>
+
+<script>
+/* =====================================================================
+   TEAM DATA — fill in each person here. Leave a field "" to hide it.
+   photo: path to an image in the repo, e.g. "photos/aflah.jpg"
+   linkedin: full profile URL.  instagram: handle (no @) or full URL.
+   Scanning a person's QR (made separately for their ID card) must open   SITE + "#/" + key
+   Keys: e1–e5 = executive board (faculty advisor, founder, co-founder, creative head, media wing head), m01–m17 = members
+   ===================================================================== */
+const SITE = "https://voxup-ekctc.github.io/voxup-ekctc/";
+
+const blank = {name:"",batch:"",dept:"",id:"",mail:"",linkedin:"",instagram:"",photo:""};
+const EXEC = [
+  {...blank, role:"Faculty Advisor",name:"Nihala Nisam", batch:"", dept:"Science and Humanities", id:"", mail:"nhlz.wadehra@gmail.com", linkedin: "https://www.linkedin.com/in/nihalanisam?utm_source=share_via&utm_content=profile&utm_medium=member_android", instagram:"https://www.instagram.com/insane_lady_/", photo:"photos/member-00.jpg"},
+  {...blank, role:"Founder", name:"AFLAH LABEEB P", batch:"2024-28", dept:"Computer Science", id:"", mail:"aflahlabeebp@gmail.com", linkedin: "https://www.linkedin.com/in/aflah-labeeb-p-809556328?utm_source=share_via&utm_content=profile&utm_medium=member_android", instagram:"https://www.instagram.com/aflah_labeeb_p/", photo:"photos/member-01.jpg",pos:"50% 40%", zoom:1.5},
+  {...blank, role:"Co-Founder", name:"NEESMA P", batch:"2024-28", dept:"Computer Science", id:"", mail:"sreeneesma@gmail.com",     linkedin: "https://www.linkedin.com/in/neesma-anil-2385803b4?utm_source=share_via&utm_content=profile&utm_medium=member_android", instagram:"https://www.instagram.com/neesma._/", photo:"photos/member-02.jpg",pos:"50% 60%", zoom:1.3},
+  {...blank, role:"Creative Head", name:"ANJALI T", batch:"2024-28", dept:"Computer Science", id:"", mail:"anjalithayy@gmail.com", linkedin: "https://www.linkedin.com/in/anjali-thayyil-15a80a328?utm_source=share_via&utm_content=profile&utm_medium=member_android", instagram:"https://www.instagram.com/_anjalithayyil_?stkn=d3J3bjQybjllZ25y", photo:"photos/member-03.jpg"},
+  {...blank, role:"Media Wing Head",name:"HAMDAN PV", batch:"2025-29", dept:"Computer Science", id:"", mail:"hamdzzpalliyaalil@gmail.com", linkedin: "https://www.linkedin.com/in/hamdan-pv-3285803b4?utm_source=share_via&utm_content=profile&utm_medium=member_android", instagram:"https://www.instagram.com/hamdan_pv/", photo:"photos/member-04.jpg"},
+];
+const MEMBERS = Array.from({length:17},()=>({...blank, role:"Member"}));
+/* e.g. MEMBERS[0] = {...blank, role:"Anchor", name:"…", batch:"2025-29", dept:"CSE", id:"…", mail:"…", linkedin:"…", instagram:"…", photo:"photos/…jpg"}; */
+MEMBERS[0] = {...blank, role:"Creative", name:"HAFID VALIYAKATH", batch:"2024-28", dept:"ECE", id:"", mail:"hafidvkshah12345@gmail.com", linkedin:"https://www.linkedin.com/in/hafid-valiyakath-589936358?utm_source=share_via&utm_content=profile&utm_medium=member_android", instagram:"https://www.instagram.com/storiess_of_vk?stkn=YWlhaHE1Y2J1Nm9k", photo:"photos/member-05.jpg"};
+MEMBERS[1] = {...blank, 
+  role:"Creative", 
+  name:"AMNA PARAMBAT", 
+  batch:"2025-29", 
+  dept:"CSE", id:"",
+  mail:"amnaparambatt@gmail.com",
+  linkedin:"https://www.linkedin.com/in/amna-parambat?utm_source=share_via&utm_content=profile&utm_medium=member_android", 
+  instagram:"https://www.instagram.com/amna.withpurpose?stkn=MXZlYjduOWhxNGRy",
+  photo:"photos/member-06.jpg",pos:"80% 20%", zoom:1.4};
+MEMBERS[2] = {...blank, 
+  role:"Creative", 
+  name:"SAHAL SABITH", 
+  batch:"2025-29", 
+  dept:"CSE", id:"",
+  mail:"sahalsabith111@gmail.com",
+  linkedin:"https://www.linkedin.com/in/sahal-sabith-406691306?utm_source=share_via&utm_content=profile&utm_medium=member_ios", 
+  instagram:"https://www.instagram.com/sahal_sabith_?stkn=Z29tdzJvODViN2dt&utm_source=qr",
+  photo:"photos/member-07.jpg",pos:"80% 20%", zoom:1.3};
+MEMBERS[3] = {...blank, 
+  role:"Creative", 
+  name:"FATHIMA MINHA MC", 
+  batch:"2025-29", 
+  dept:"CE", id:"",
+  mail:"fathiimaminnaa@gmail.com",
+  linkedin:"https://www.linkedin.com/in/fathima-minha-767a8043a?utm_source=share_via&utm_content=profile&utm_medium=member_android", 
+  instagram:"https://www.instagram.com/m.innnaa__?stkn=cnVicnBvaHN4aXM0",
+  photo:"photos/member-08.jpg",pos:"50% 50%", zoom:2.0};
+MEMBERS[4] = {...blank, 
+  role:"Host", 
+  name:"LIYAN MOHAMMED KK ", 
+  batch:"2025-29", 
+  dept:"CSE", id:"",
+  mail:"liyanxd999@gmail.com",
+  linkedin:"", 
+  instagram:"https://www.instagram.com/liy3nnnn?stkn=MXMzcjB6NHp6djIycA==",
+  photo:"photos/member-09.jpg",zoom:1.3};
+MEMBERS[5] = {...blank, 
+  role:"Host", 
+  name:"FATHIMA RIFANA V", 
+  batch:"2025-29", 
+  dept:"AI&DS", id:"",
+  mail:"Rifanav5@gmail.com",
+  linkedin:"https://www.linkedin.com/in/rifana-v-64722b386", 
+  instagram:"https://www.instagram.com/_rifaaiii_?stkn=MWt6MXV1enZqMDc0YQ==",
+  photo:"photos/member-10.jpg",pos:"50% 50%", zoom:1.3};
+MEMBERS[6] = {...blank, 
+  role:"Host", 
+  name:"AMEERA SANA K", 
+  batch:"2025-29", 
+  dept:"CE", id:"",
+  mail:" ameerasanak21@gmail.com",
+  linkedin: "https://www.linkedin.com/in/ameerasanak-undefined-776162445?utm_source=share_via&utm_content=profile&utm_medium=member_android", 
+  instagram:"https://www.instagram.com/____ameera.sanaa?stkn=dHBiMWs0cGo1YmU%3D",
+  photo:"photos/member-11.jpg"};
+MEMBERS[7] = {...blank, 
+  role:"Host", 
+  name:"FATHIMA RIFA P", 
+  batch:"2025-29", 
+  dept:"CE", id:"",
+  mail:" ffathimarifa2007@gmail.com",
+  linkedin: "https://www.linkedin.com/in/fathima-rifa-5b1a12443?utm_source=share_via&utm_content=profile&utm_medium=member_android", 
+  instagram:"https://www.instagram.com/rifa__hh_?cplk=MTRyazdpbnpwb293dQ==",
+  photo:"photos/member-12.jpg"};
+MEMBERS[8] = {...blank, 
+  role:"Host", 
+  name:"FATHIMA NIYA T", 
+  batch:"2025-29", 
+  dept:"CE", id:"",
+  mail:" fathimaniya200@gmail.com",
+  linkedin: "https://www.linkedin.com/in/fathima-niya-t-071644361?utm_source=share_via&utm_content=profile&utm_medium=member_ios", 
+  instagram:"https://www.instagram.com/niya_thaikkat?xtok=MXg2enJkaWs1aGs0aQ%3D%3D&utm_source=qr",
+  photo:"photos/member-13.jpg"};
+MEMBERS[9] = {...blank, 
+  role:"Media", 
+  name:"DILSHAD C", 
+  batch:"2025-29", 
+  dept:"CSE", id:"",
+  mail:" diludilshad843@gmail.com",
+  linkedin: "www.linkedin.com/in/ dilshad-c-4827a94", 
+  instagram:"https://www.instagram.com/dilshhdd?stkn=dTd4MjV0aWx6anlo",
+  photo:"photos/member-14.jpg", pos:"50% 50%", zoom:1.3};
+MEMBERS[10] = {...blank, 
+  role:"Media", 
+  name:"JINISH MIDLAJ EC", 
+  batch:"2025-29", 
+  dept:"CSE", id:"",
+  mail:"jinishmidlaj0@gmail.com",
+  linkedin: "http://linkedin.com/in/jinish-midlaj-0a4a29384", 
+  instagram:"https://www.instagram.com/jinish_midlaj?stkn=MXVvbzQyeDhvdDQ4Yw==",
+  photo:"photos/member-15.jpg", pos:"90% 20%", zoom:1.3};
+MEMBERS[11] = {...blank, 
+  role:"Media", 
+  name:"MUHAMMED RISHAF P", 
+  batch:"2025-29", 
+  dept:"CE", id:"",
+  mail:"rishafkrishaf@gmail.com",
+  linkedin: "https://www.linkedin.com/in/rishaf-rishaf-p-a20228386?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app", 
+  instagram:"https://www.instagram.com/_riisha_f?stkn=MXd0MmdnOWQyNDB5ZA==",
+  photo:"photos/member-16.jpg", pos:"70% 20%", zoom:1.0};
+MEMBERS[12] = {...blank, 
+  role:"Media", 
+  name:"MUHAMMED RISHAF P", 
+  batch:"2025-29", 
+  dept:"CE", id:"",
+  mail:"rishafkrishaf@gmail.com",
+  linkedin: "https://www.linkedin.com/in/rishaf-rishaf-p-a20228386?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app", 
+  instagram:"https://www.instagram.com/_riisha_f?stkn=MXd0MmdnOWQyNDB5ZA==",
+  photo:"photos/member-17.jpg", pos:"70% 20%", zoom:1.0};
+MEMBERS[13] = {...blank, 
+  role:"Media", 
+  name:"MUHAMMED RISHAF P", 
+  batch:"2025-29", 
+  dept:"CE", id:"",
+  mail:"rishafkrishaf@gmail.com",
+  linkedin: "https://www.linkedin.com/in/rishaf-rishaf-p-a20228386?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app", 
+  instagram:"https://www.instagram.com/_riisha_f?stkn=MXd0MmdnOWQyNDB5ZA==",
+  photo:"photos/member-18.jpg", pos:"70% 20%", zoom:1.0};
+MEMBERS[14] = {...blank, 
+  role:"Media", 
+  name:"HAYA A", 
+  batch:"2025-29", 
+  dept:"AI&DS", id:"",
+  mail:"hayarehbel@gmail.com",
+  linkedin: "https://www.linkedin.com/in/haya-rehbel-b43a2b385", 
+  instagram:"https://www.instagram.com/rehbelspov._?stkn=OW1qM29rcjhjeTh3&utm_source=qr",
+  photo:"photos/member-19.jpg", pos:"70% 20%", zoom:1.0};
+MEMBERS[15] = {...blank, 
+  role:"Media", 
+  name:"MANAL MUSTHAFA P", 
+  batch:"2025-29", 
+  dept:"CSE", id:"",
+  mail:"Manalmusthafa66@gmail.com",
+  linkedin: "https://www.linkedin.com/in/manal-musthafa-191a37384?utm_source=share_via&utm_content=profile&utm_medium=member_android", 
+  instagram:"https://www.instagram.com/__.mnl____?exln=eHF3ZmIydmE1MXV5",
+  photo:"photos/member-20.jpg", pos:"70% 20%", zoom:1.2};
+MEMBERS[16] = {...blank, 
+  role:"Media", 
+  name:"DHANIYA EK", 
+  batch:"2025-29", 
+  dept:"CSE", id:"",
+  mail:"dhaniyaek@gmail.com",
+  linkedin: "https://www.linkedin.com/in/dhaniya-ek-a12a2b384", 
+  instagram:"https://www.instagram.com/daniiyhaah?stkn=eHV6am9wamx0cW15&utm_source=qr",
+  photo:"photos/member-21.jpg", pos:"70% 20%", zoom:1.0};
+
+EXEC.forEach((p,i)=>p.key="e"+(i+1));
+MEMBERS.forEach((p,i)=>p.key="m"+String(i+1).padStart(2,"0"));
+const ALL = [...EXEC,...MEMBERS];
+
+/* ---------- helpers ---------- */
+const $ = (s,r=document)=>r.querySelector(s);
+const esc = s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const initials = n=>n?n.trim().split(/\s+/).slice(0,2).map(w=>w[0]).join("").toUpperCase():"VX";
+const igUrl = v=>/^https?:/i.test(v)?v:"https://instagram.com/"+v.replace(/^@/,"");
+const safeUrl = v=>/^https?:\/\//i.test(v)?v:"";
+function cardHTML(p,i=0,big=false){
+  const field=(l,v,full)=>v?`<div class="${full?"full":""}"><dt>${l}</dt><dd>${esc(v)}</dd></div>`:"";
+  const soc=[
+    p.mail?`<a href="mailto:${esc(p.mail)}">Mail</a>`:"",
+    safeUrl(p.linkedin)?`<a href="${esc(p.linkedin)}" target="_blank" rel="noopener">LinkedIn</a>`:"",
+    p.instagram?`<a href="${esc(igUrl(p.instagram))}" target="_blank" rel="noopener">Instagram</a>`:""
+  ].join("");
+ const photo=p.photo?`<img src="${esc(p.photo)}" alt="${esc(p.name||p.role)}" loading="lazy" style="object-position:${esc(p.pos||'50% 20%')};transform:scale(${+p.zoom||1})">`:`<div class="mono">${esc(initials(p.name))}</div>`;
+  return `<article class="card" style="--i:${i}" data-key="${p.key}">
+    <div class="card-in">
+      <div class="top"><b>VOXUP EKC</b><span>${p.id?esc(p.id):p.key.toUpperCase()}</span></div>
+      <div class="ph">${photo}<span class="role">${esc(p.role)}</span></div>
+      <h3 class="name">${p.name?esc(p.name):"To be added"}</h3>
+      <dl class="meta">${field("Batch",p.batch)}${field("Department",p.dept)}${field("ID",p.id)}${field("Mail",p.mail,true)}</dl>
+      <div class="row"><div class="socials">${soc}</div></div>
+    </div></article>`;
+}
+
+/* ---------- render ---------- */
+const grid=$("#memberGrid");
+grid.innerHTML=MEMBERS.map((p,i)=>cardHTML(p,i)).join("");
+const execGrid=$("#execGrid");
+execGrid.innerHTML=EXEC.map((p,i)=>cardHTML(p,i)).join("");
+[grid,execGrid].forEach(g=>g.querySelectorAll(".card").forEach((c,i)=>{c.classList.add("rv");c.style.setProperty("--d",(i%4)*110+"ms")}));
+$("#yr").textContent=new Date().getFullYear();
+$("#track").innerHTML=Array(2).fill(["Voice up","Radio","Podcasts","Reels","Interviews","Level up","Student talent","EKC"].map(t=>`<span>${t}</span>`).join("")).join("");
+
+/* ---------- reveal on scroll ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const t=e.target;t.classList.add("in");io.unobserve(t);if(t.classList.contains("card")){const dl=parseInt(t.style.getPropertyValue("--d"))||0;setTimeout(()=>t.classList.remove("rv","in"),dl+1100)}}}),{threshold:.15,rootMargin:"0px 0px -6% 0px"});
+document.querySelectorAll(".rv,h2").forEach(el=>io.observe(el));
+const cio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){
+  const el=e.target,end=+el.dataset.count,t0=performance.now();
+  (function f(t){const k=Math.min(1,(t-t0)/1400);el.textContent=Math.round(end*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(f)})(t0);
+  cio.unobserve(el)}}),{threshold:.6});
+document.querySelectorAll("[data-count]").forEach(el=>cio.observe(el));
+
+/* ---------- hero: parallax, plate tilt, eye tracking ---------- */
+const hero=$(".hero"),layers=[...hero.querySelectorAll(".layer")],plate=$("#plate"),irises=[...document.querySelectorAll(".iris")],eyes=[...document.querySelectorAll(".eye")];
+const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+let mx=0,my=0,tx=0,ty=0,sy=0,tgtX=innerWidth/2,tgtY=innerHeight/2;
+function pointer(x,y){
+  tgtX=x;tgtY=y;
+  mx=(x/innerWidth-.5)*2;my=(y/innerHeight-.5)*2;
+}
+addEventListener("pointermove",e=>pointer(e.clientX,e.clientY),{passive:true});
+addEventListener("deviceorientation",e=>{if(e.gamma==null)return;pointer(innerWidth/2+e.gamma*14,innerHeight/2+(e.beta-45)*10)},{passive:true});
+addEventListener("scroll",()=>{
+  sy=scrollY;
+  $("#progress").style.transform=`scaleX(${sy/(document.documentElement.scrollHeight-innerHeight)})`;
+  $("#nav").classList.toggle("solid",sy>40);
+},{passive:true});
+function loop(){
+  tx+=(mx-tx)*.07;ty+=(my-ty)*.07;
+  if(!reduce&&sy<innerHeight*1.2){
+    layers.forEach(l=>{const d=+l.dataset.depth||0;l.style.transform=`translate3d(${-tx*d}px,${-ty*d*.6+sy*d*.012}px,0)`});
+    plate.style.transform=`translate3d(${tx*-8}px,${ty*-6-sy*.12}px,0) rotateY(${tx*7}deg) rotateX(${-ty*6}deg)`;
+    eyes.forEach((eye,i)=>{
+      const r=eye.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+      const dx=tgtX-cx,dy=tgtY-cy,d=Math.hypot(dx,dy)||1,max=r.width*.24,k=Math.min(1,d/220);
+      irises[i].style.transform=`translate(${dx/d*max*k}px,${dy/d*max*k}px)`;
+    });
+  }
+  requestAnimationFrame(loop);
+}
+loop();
+
+/* ---------- 3D tilt on cards (fine pointers only) ---------- */
+if(matchMedia("(hover:hover)").matches&&!reduce){
+  document.addEventListener("pointermove",e=>{
+    const c=e.target.closest&&e.target.closest(".grid .card");
+    document.querySelectorAll(".grid .card.tilt").forEach(x=>{if(x!==c){x.classList.remove("tilt");x.style.setProperty("--rx","0deg");x.style.setProperty("--ry","0deg")}});
+    if(!c)return;
+    const r=c.getBoundingClientRect();
+    c.classList.add("tilt");
+    c.style.setProperty("--ry",((e.clientX-r.left)/r.width-.5)*10+"deg");
+    c.style.setProperty("--rx",(-((e.clientY-r.top)/r.height-.5))*10+"deg");
+  },{passive:true});
+}
+
+/* ---------- Person page (opened by scanning the ID-card QR): #/<key> ---------- */
+const page=$("#page"),back=$("#back");
+function route(){
+  const m=location.hash.match(/^#\/([a-z0-9]+)$/i);
+  const p=m&&ALL.find(x=>x.key===m[1].toLowerCase());
+  if(p){
+    page.innerHTML=`<div class="pg-card">${cardHTML(p)}<span class="cue">Scroll down ↓</span></div>
+    <div class="pg-more"><p class="eyebrow">The leadership</p><h2><em>Meet our heads</em></h2>
+    <p class="lead">See our faculty advisor and the leads behind VoxUp.</p>
+    <button class="btn" id="toExec">Meet our heads <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></div>`;
+    page.classList.add("show");back.classList.add("show");
+    document.body.style.overflow="hidden";page.scrollTop=0;
+    document.title=(p.name||p.role)+" · VoxUp EKC";
+    $("#toExec").onclick=()=>{location.hash="#executive";setTimeout(()=>$("#executive").scrollIntoView(),60)};
+  }else{
+    page.classList.remove("show");back.classList.remove("show");
+    document.body.style.overflow="";document.title="VoxUp EKC";
+  }
+}
+function home(){history.pushState(null,"",location.pathname+location.search);route();scrollTo(0,0)}
+addEventListener("hashchange",route);route();
+back.addEventListener("click",home);
+addEventListener("keydown",e=>{if(e.key==="Escape"&&page.classList.contains("show"))home()});
+</script>
+</body>
+</html>

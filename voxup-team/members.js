@@ -1,6 +1,6 @@
 // ====== EDIT THIS FILE: one block per member ======
 // Your GitHub Pages address (change after you publish):
-const BASE_URL = "https://YOUR-USERNAME.github.io/voxup-team";
+const BASE_URL = "https://voxup-ekctc.github.io/voxup";
 
 const MEMBERS = [
   {
@@ -42,7 +42,7 @@ const MEMBERS = [
     position: "MEDIIA WING HEAD",
     department: "Computer Science",
     batch: "2025 - 2029",
-    email: " hamdzzpalliyaalil@gmail.comm",
+    email: " hamdzzpalliyaalil@gmail.com",
     linkedin: "https://www.linkedin.com/in/anjali-thayyil-15a80a328?utm_source=share_via&utm_content=profile&utm_medium=member_android",
     instagram: "https://www.instagram.com/_anjalithayyil_?stkn=d3J3bjQybjllZ25y",
     photo: "photos/member-04.jpg"
@@ -70,15 +70,15 @@ const MEMBERS = [
     photo: "photos/member-06.jpg"
   },
  {
-    id: "member-06",
-    name: "AMNA PARAMBAT",
+    id: "member-07",
+    name: "SAHAL SABITH",
     position: "CREATIVE",
     department: "Computer Science",
     batch: "2025 - 2029",
-    email: "anjalithayy@gmail.com",
-    linkedin: "https://www.",
-    instagram: "https://",
-    photo: "photos/member-06.jpg"
+    email: "sahalsabith111@gmail.com",
+    linkedin: "https://www.linkedin.com/in/sahal-sabith-406691306?utm_source=share_via&utm_content=profile&utm_medium=member_ios",
+    instagram: "https://www.instagram.com/sahal_sabith_?stkn=Z29tdzJvODViN2dt&utm_source=qr",
+    photo: "photos/member-07.jpg"
   },{
     id: "member-06",
     name: "AMNA PARAMBAT",
