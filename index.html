@@ -385,7 +385,7 @@ nav{animation:inDown .9s ease .2s both}
     <p class="lead rv" style="margin:0">Our team introduction — the people, the patrons and the voices of VoxUp EKC</p>
   </div>
   <div class="reel rv" id="reelBox">
-    <video id="reelVid" src="reel.mp4" poster="reel-poster.jpg" loop playsinline preload="metadata"></video>
+    <video id="reelVid" src="reel.mp4" poster="reel-poster.jpg" muted loop playsinline preload="metadata"></video>
     <button class="reel-snd" id="reelSnd" type="button" aria-label="Turn sound on">🔇 Tap for sound</button>
   </div>
 </section>
@@ -853,32 +853,17 @@ addEventListener("keydown",e=>{if(e.key==="Escape"&&page.classList.contains("sho
   const up=svg.querySelector('g[stroke^="url"]'),ar=svg.querySelector('polygon[fill="#ff8a00"]');
   if(up&&ar){const g=document.createElementNS(NS,"g");g.setAttribute("class","upgrp");up.parentNode.insertBefore(g,up);g.appendChild(up);g.appendChild(ar)}
 })();
-/* Reel: plays with sound when the browser allows it; otherwise starts muted and turns the sound on at the visitor's first tap/click/key */
+/* Reel: autoplay (muted) when on screen, pause when off screen, button toggles sound */
 (function(){
   const v=document.getElementById("reelVid"),b=document.getElementById("reelSnd");if(!v||!b)return;
-  let visible=false,wantSound=true;
-  const label=()=>{b.textContent=v.muted?"🔇 Tap for sound":"🔊 Sound on";b.hidden=false};
-  function start(){
-    v.muted=false;
-    const p=v.play();
-    if(p&&p.catch)p.catch(()=>{v.muted=true;const q=v.play();if(q&&q.catch)q.catch(()=>{});label()});
-    label();
-  }
-  function unlock(){
-    removeEventListener("pointerdown",unlock,true);removeEventListener("keydown",unlock,true);
-    if(wantSound&&visible&&v.muted){v.muted=false;label()}
-  }
-  addEventListener("pointerdown",unlock,true);addEventListener("keydown",unlock,true);
   new IntersectionObserver(es=>es.forEach(e=>{
-    visible=e.isIntersecting;
-    if(visible)start();else v.pause();
+    if(e.isIntersecting){const p=v.play();if(p&&p.catch)p.catch(()=>{})}else v.pause();
   }),{threshold:.4}).observe(v);
-  b.addEventListener("click",e=>{
-    e.stopPropagation();
-    wantSound=v.muted;v.muted=!v.muted;label();
+  b.addEventListener("click",()=>{
+    v.muted=!v.muted;
+    b.textContent=v.muted?"🔇 Tap for sound":"🔊 Sound on";
     if(v.paused){const p=v.play();if(p&&p.catch)p.catch(()=>{})}
   });
-  v.addEventListener("volumechange",label);
 })();
 
 </script>
