@@ -300,6 +300,11 @@ nav{animation:inDown .9s ease .2s both}
 .reel video{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:20px;background:#000}
 .reel-snd{position:absolute;right:16px;top:16px;border:0;cursor:pointer;color:#fff;font:700 .72rem 'Montserrat',sans-serif;letter-spacing:.14em;text-transform:uppercase;padding:11px 16px;border-radius:99px;background:rgba(5,10,20,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--line);transition:transform .3s var(--ease),background .3s}
 .reel-snd:hover{transform:translateY(-2px);background:var(--grad-h)}
+
+@media(max-width:600px){
+  .reel-snd{right:10px;top:10px;padding:6px 10px;font-size:.54rem;letter-spacing:.08em}
+}
+
 </style>
 </head>
 <body>
